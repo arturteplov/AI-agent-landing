@@ -267,16 +267,48 @@
     </form>
   </main>
 
+  <!--
+    Sign up at https://formspree.io → New form → copy the form id from the form URL
+    (e.g. https://formspree.io/f/abcdwxyz → id is abcdwxyz). Paste it below.
+    Submissions appear in Formspree dashboard + optional email/Slack/Notion integrations.
+  -->
   <script>
-    function handleSubmit(e) {
+    var FORMSPREE_FORM_ID = 'YOUR_FORM_ID';
+
+    async function handleSubmit(e) {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const btn = e.target.querySelector('.btn');
-      btn.textContent = "You're on the list ✓";
-      btn.style.background = 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)';
-      btn.style.boxShadow = '0 4px 24px rgba(34, 197, 94, 0.35)';
+      var emailInput = document.getElementById('email');
+      var email = emailInput.value.trim();
+      var btn = e.target.querySelector('.btn');
+
+      if (!FORMSPREE_FORM_ID || FORMSPREE_FORM_ID === 'YOUR_FORM_ID') {
+        console.warn('Set FORMSPREE_FORM_ID in index.html to store emails.');
+        alert('This form is not configured yet. Add your Formspree form ID in the page.');
+        return;
+      }
+
       btn.disabled = true;
-      document.getElementById('email').disabled = true;
+
+      try {
+        var res = await fetch('https://formspree.io/f/' + FORMSPREE_FORM_ID, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({ email: email, _subject: 'CLuska8 — early access' }),
+        });
+
+        if (!res.ok) throw new Error('Submit failed');
+
+        btn.textContent = "You're on the list ✓";
+        btn.style.background = 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)';
+        btn.style.boxShadow = '0 4px 24px rgba(34, 197, 94, 0.35)';
+        emailInput.disabled = true;
+      } catch (err) {
+        btn.disabled = false;
+        alert('Something went wrong. Please try again.');
+      }
     }
   </script>
 </body>

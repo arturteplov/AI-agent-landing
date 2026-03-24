@@ -1,4 +1,4 @@
-# Cluska8 — marketing site
+# Cluska8 — landing page
 
 Next.js + Tailwind landing page for [Cluska8](https://cluska8.com) (AI customer support agent). Deploy on [Vercel](https://vercel.com) (recommended).
 
